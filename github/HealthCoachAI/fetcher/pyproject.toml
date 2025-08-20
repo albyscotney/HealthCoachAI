@@ -1,0 +1,15 @@
+[project]
+name = "garmin-fetcher"
+version = "0.1.0"
+description = "Fetches health data from Garmin Connect and writes it to InfluxDB."
+requires-python = ">=3.11"
+dependencies = [
+    "garth",           
+    "garminconnect",   
+    "fitparse",        
+    "influxdb",        
+    "influxdb-client", 
+    "python-dotenv",   
+    "pytz",            
+    "pandas",         
+]
