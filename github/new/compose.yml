@@ -1,0 +1,52 @@
+services:
+services:
+  garmin-fetch-data:
+    restart: unless-stopped
+    build: ./fetcher
+    container_name: garmin-fetch-data
+    depends_on:
+      - influxdb
+    volumes:
+      - garminconnect_tokens:/home/appuser/.garminconnect
+    environment:
+      - INFLUXDB_VERSION=3
+      - INFLUXDB_HOST=influxdb
+      - INFLUXDB_PORT=8086
+      - INFLUXDB_DATABASE=${INFLUXDB3_RAW_BUCKET}
+      - INFLUXDB_V3_ACCESS_TOKEN=${INFLUXDB3_ADMIN_TOKEN}
+
+      - GARMINCONNECT_IS_CN=False
+      - GARMINCONNECT_EMAIL=${GARMINCONNECT_EMAIL}
+      - GARMINCONNECT_BASE64_PASSWORD=${GARMINCONNECT_BASE64_PASSWORD}
+      - USER_TIMEZONE=Europe/London
+      - TOKEN_DIR=/home/appuser/.garminconnect
+
+  enricher:
+    restart: unless-stopped
+    build: ./enricher
+    container_name: data-enricher
+    depends_on:
+      - influxdb
+    environment:
+      - INFLUXDB_URL=http://influxdb:8086
+      - INFLUXDB_TOKEN=${INFLUXDB3_ADMIN_TOKEN}
+      - INFLUXDB_ORG=${INFLUXDB3_ORG}
+      - INFLUXDB_RAW_BUCKET=${INFLUXDB3_RAW_BUCKET}
+      - INFLUXDB_ENRICHED_BUCKET=${INFLUXDB3_ENRICHED_BUCKET}
+
+  influxdb:
+    restart: unless-stopped
+    container_name: influxdb
+    hostname: influxdb
+    image: 'influxdb:3.1' 
+    ports:
+      - '8086:8086'
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+    env_file:
+      - .env
+
+
+volumes:
+  influxdb_data:
+  garminconnect_tokens: 

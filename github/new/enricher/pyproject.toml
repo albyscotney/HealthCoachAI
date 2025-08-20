@@ -1,0 +1,10 @@
+[project]
+name = "data-enricher"
+version = "0.1.0"
+description = "Calculates enriched metrics from raw Garmin data in InfluxDB."
+requires-python = ">=3.11"
+dependencies = [
+    "pandas",          # For data analysis and calculations
+    "influxdb-client", # Modern client for InfluxDB v2/v3
+    "schedule",        # For running the script periodically
+]
