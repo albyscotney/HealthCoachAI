@@ -1,9 +1,8 @@
 services:
-services:
-  garmin-fetch-data:
+  fetcher:
     restart: unless-stopped
     build: ./fetcher
-    container_name: garmin-fetch-data
+    container_name: fetcher
     depends_on:
       - influxdb
     volumes:
@@ -11,9 +10,10 @@ services:
     environment:
       - INFLUXDB_VERSION=3
       - INFLUXDB_HOST=influxdb
-      - INFLUXDB_PORT=8086
+      - INFLUXDB_PORT=8181
       - INFLUXDB_DATABASE=${INFLUXDB3_RAW_BUCKET}
       - INFLUXDB_V3_ACCESS_TOKEN=${INFLUXDB3_ADMIN_TOKEN}
+      - INFLUXDB_ORG=${INFLUXDB3_ORG}
 
       - GARMINCONNECT_IS_CN=False
       - GARMINCONNECT_EMAIL=${GARMINCONNECT_EMAIL}
@@ -28,41 +28,38 @@ services:
     depends_on:
       - influxdb
     environment:
-      - INFLUXDB_URL=http://influxdb:8086
+      - INFLUXDB_URL=http://influxdb:8181
       - INFLUXDB_TOKEN=${INFLUXDB3_ADMIN_TOKEN}
       - INFLUXDB_ORG=${INFLUXDB3_ORG}
       - INFLUXDB_RAW_BUCKET=${INFLUXDB3_RAW_BUCKET}
       - INFLUXDB_ENRICHED_BUCKET=${INFLUXDB3_ENRICHED_BUCKET}
 
   influxdb:
-    restart: unless-stopped
-    container_name: influxdb
-    hostname: influxdb
-    image: 'influxdb:3.1' 
-    ports:
-      - '8086:8086'
-    volumes:
-      - influxdb_data:/var/lib/influxdb2
-    env_file:
-      - .env
+      # Use the specific version you requested
+      image: influxdb:3.3-core
+      restart: unless-stopped
+      ports:
+        # Exposes the container's port 8086 on your machine's port 8181
+        - '8181:8181'
+      volumes:
+        # The native path for InfluxDB v3 data is /var/lib/influxdb3
+        - influxdb_data:/var/lib/influxdb3
+      environment:
+        - INFLUXDB_CONFIG_PATH=/etc/influxdb3/influxdb3.config
+        - INFLUXDB_ADMIN_TOKEN=${INFLUXDB3_ADMIN_TOKEN} # Loaded from your .env file
+      command:
+        - serve
+        - --http-bind          # <-- Add this line
+        - 0.0.0.0:8181 
+        - --object-store
+        - file
+        - --node-id
+        - my-influxdb-node
+        - --data-dir
+        - /var/lib/influxdb3
 
-  grafana:
-    restart: unless-stopped
-    container_name: grafana
-    hostname: grafana
-    image: 'grafana/grafana:latest'
-    ports:
-      - '3000:3000'
-    volumes:
-      - grafana_data:/var/lib/grafana
-      - ./Grafana_Datasource:/etc/grafana/provisioning/datasources
-      - ./Grafana_Dashboard:/etc/grafana/provisioning/dashboards
-    environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-      - GF_PLUGINS_PREINSTALL=marcusolsson-hourly-heatmap-panel
+
 
 volumes:
   influxdb_data:
-  grafana_data:
   garminconnect_tokens: 

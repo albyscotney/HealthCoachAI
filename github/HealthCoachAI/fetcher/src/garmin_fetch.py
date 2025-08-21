@@ -14,18 +14,6 @@ from garminconnect import (
     GarminConnectTooManyRequestsError,
 )
 garmin_obj = None
-banner_text = """
-
-*****  █▀▀ ▄▀█ █▀█ █▀▄▀█ █ █▄ █    █▀▀ █▀█ ▄▀█ █▀▀ ▄▀█ █▄ █ ▄▀█  *****
-*****  █▄█ █▀█ █▀▄ █ ▀ █ █ █ ▀█    █▄█ █▀▄ █▀█ █▀  █▀█ █ ▀█ █▀█  *****
-
-______________________________________________________________________
-
-By Arpan Ghosh | Please consider supporting the project if you love it
-______________________________________________________________________
-
-"""
-print(banner_text)
 
 env_override = dotenv.load_dotenv("override-default-vars.env", override=True)
 if env_override:
@@ -35,7 +23,7 @@ if env_override:
 INFLUXDB_VERSION = os.getenv("INFLUXDB_VERSION",'1') # Your influxdb database version (accepted values are '1' or '3')
 assert INFLUXDB_VERSION in ['1','3'], "Only InfluxDB version 1 or 3 is allowed - please ensure to set this value to either 1 or 3"
 INFLUXDB_HOST = os.getenv("INFLUXDB_HOST",'your.influxdb.hostname') # Required
-INFLUXDB_PORT = int(os.getenv("INFLUXDB_PORT", 8086)) # Required
+INFLUXDB_PORT = int(os.getenv("INFLUXDB_PORT", 8181)) # Required
 INFLUXDB_USERNAME = os.getenv("INFLUXDB_USERNAME", 'influxdb_username') # Required
 INFLUXDB_PASSWORD = os.getenv("INFLUXDB_PASSWORD", 'influxdb_access_password') # Required
 INFLUXDB_DATABASE = os.getenv("INFLUXDB_DATABASE", 'GarminStats') # Required
@@ -358,7 +346,7 @@ def get_sleep_data(date_str):
                     "Device": GARMIN_DEVICENAME,
                     "Database_Name": INFLUXDB_DATABASE
                 },
-                "fields": {"SleepStageLevel": entry.get("activityLevel")} # Duplicating last entry for visualization in Grafana
+                "fields": {"SleepStageLevel": entry.get("activityLevel")} # Duplicating last entry for visualization 
             })
     sleep_restlessness_intraday = all_sleep_data.get("sleepRestlessMoments")
     if sleep_restlessness_intraday:
