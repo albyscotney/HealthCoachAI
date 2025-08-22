@@ -20,7 +20,7 @@ if env_override:
     logging.warning("System ENV variables are overridden with override-default-vars.env")
 
 # %%
-INFLUXDB_VERSION = os.getenv("INFLUXDB_VERSION",'1') # Your influxdb database version (accepted values are '1' or '3')
+INFLUXDB_VERSION = os.getenv("INFLUXDB_VERSION",'3') # Your influxdb database version (accepted values are '1' or '3')
 assert INFLUXDB_VERSION in ['1','3'], "Only InfluxDB version 1 or 3 is allowed - please ensure to set this value to either 1 or 3"
 INFLUXDB_HOST = os.getenv("INFLUXDB_HOST",'your.influxdb.hostname') # Required
 INFLUXDB_PORT = int(os.getenv("INFLUXDB_PORT", 8181)) # Required
@@ -346,7 +346,7 @@ def get_sleep_data(date_str):
                     "Device": GARMIN_DEVICENAME,
                     "Database_Name": INFLUXDB_DATABASE
                 },
-                "fields": {"SleepStageLevel": entry.get("activityLevel")} # Duplicating last entry for visualization 
+                "fields": {"SleepStageLevel": entry.get("activityLevel")} # Duplicating last entry for visualization in Grafana
             })
     sleep_restlessness_intraday = all_sleep_data.get("sleepRestlessMoments")
     if sleep_restlessness_intraday:
@@ -1342,4 +1342,3 @@ else:
             logging.info(f"No new data found : Current watch and influxdb sync time is {last_watch_sync_time_UTC} UTC")
         logging.info(f"waiting for {UPDATE_INTERVAL_SECONDS} seconds before next automatic update calls")
         time.sleep(UPDATE_INTERVAL_SECONDS)
-
