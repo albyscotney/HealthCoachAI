@@ -1,0 +1,1 @@
+idb3.003.l[Â÷Ò{"catalog_batch":{"Node":{"time_ns":1756425877358385793,"node_catalog_id":0,"node_id":"Influxdb-node1","ops":[{"RegisterNode":{"node_id":"Influxdb-node1","instance_id":"9e2f4439-8bbd-4c55-bd13-b9d8caafaf43","registered_time_ns":1756425877358385793,"core_count":8,"mode":["Core"],"process_uuid":"fe07cad0-e7aa-4947-8c2c-81c3f27de1ed"}}]}},"sequence_number":62}

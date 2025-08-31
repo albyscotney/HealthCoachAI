@@ -1,0 +1,1 @@
+idb3.003.lx»VÉ{"catalog_batch":{"Node":{"time_ns":1756424626422797922,"node_catalog_id":0,"node_id":"Influxdb-node1","ops":[{"RegisterNode":{"node_id":"Influxdb-node1","instance_id":"9e2f4439-8bbd-4c55-bd13-b9d8caafaf43","registered_time_ns":1756424626422797922,"core_count":8,"mode":["Core"],"process_uuid":"a7060476-e651-46c5-a552-ff8527938b14"}}]}},"sequence_number":52}
