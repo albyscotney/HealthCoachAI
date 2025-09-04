@@ -1,7 +1,7 @@
 services:
   garmin-fetch-data:
     restart: unless-stopped
-    build: .
+    build: ./fetcher
     container_name: garmin-fetch-data
     depends_on:
       - influxdb
@@ -10,6 +10,16 @@ services:
     env_file:
       - .env.influx
       - .env.garmin
+      - .env.user
+  
+  garmin-enrich-data:
+    restart: unless-stopped
+    build: ./enricher
+    container_name: garmin-enrich-data
+    depends_on:
+      - influxdb
+    env_file:
+      - .env.influx
       - .env.user
 
   influxdb:

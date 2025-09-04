@@ -1,1 +1,0 @@
-idb3.003.lKyv{"catalog_batch":{"Node":{"time_ns":1756425978743299881,"node_catalog_id":0,"node_id":"Influxdb-node1","ops":[{"StopNode":{"node_id":"Influxdb-node1","stopped_time_ns":1756425978743299881,"process_uuid":"fe07cad0-e7aa-4947-8c2c-81c3f27de1ed"}}]}},"sequence_number":63}

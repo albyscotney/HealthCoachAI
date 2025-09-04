@@ -1,1 +1,0 @@
-idb3.003.lmg‹6{"catalog_batch":{"Node":{"time_ns":1756425873436787013,"node_catalog_id":0,"node_id":"Influxdb-node1","ops":[{"StopNode":{"node_id":"Influxdb-node1","stopped_time_ns":1756425873436787013,"process_uuid":"84cc5e99-e0cd-49ab-bd7e-f5155dc704db"}}]}},"sequence_number":61}

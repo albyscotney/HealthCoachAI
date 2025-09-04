@@ -1,1 +1,0 @@
-idb3.003.lP5ªµ{"catalog_batch":{"Node":{"time_ns":1756422526826879673,"node_catalog_id":0,"node_id":"Influxdb-node1","ops":[{"StopNode":{"node_id":"Influxdb-node1","stopped_time_ns":1756422526826879673,"process_uuid":"f914b47d-2def-4af7-996f-c9ed9c9800ce"}}]}},"sequence_number":45}
