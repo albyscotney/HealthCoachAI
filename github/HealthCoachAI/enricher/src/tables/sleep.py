@@ -5,22 +5,7 @@ import os
 import sys
 from dotenv import load_dotenv
 from datetime import datetime
-
-current_dir = os.getcwd()
-
-project_root = os.path.join(current_dir, '..', '..')
-
-if project_root not in sys.path:
-    sys.path.append(project_root)
-
-from enricher.src.utils.querying import setup_connection, fill_nulls, query_garmin
-
-client = setup_connection()
-
-env_path = os.path.expanduser(project_root + '/.env.user')
-load_dotenv(dotenv_path=env_path)
-sex = os.getenv('GENDER')
-USER = os.getenv('GARMINCONNECT_EMAIL')
+from src.utils.querying import fill_nulls, query_garmin
 
 def get_sleep_wake_times(df:pd.DataFrame) -> pd.DataFrame:
     df = df.sort_index()
@@ -31,6 +16,7 @@ def get_sleep_wake_times(df:pd.DataFrame) -> pd.DataFrame:
     df['SleepDate'] = df['WakeTime'].dt.date - pd.Timedelta(days=1)
     df['SleepDuration'] = df['sleepTimeSeconds'] / 3600
     return df[['SleepDate', 'SleepTime', 'WakeTime', 'SleepDuration']]
+
 def calculate_whoop_consistency(df_input):
     """
     Calculates a WHOOP-style consistency metric for a given DataFrame slice.
@@ -80,6 +66,7 @@ def calculate_whoop_consistency(df_input):
 
     consistency_score = (consistent_minutes / total_minutes) * 100
     return consistency_score
+
 def interpolate_df(x_new, baseline_df, x_col, y_col):
     """
     Performs efficient linear interpolation on a DataFrame.
@@ -103,7 +90,8 @@ def interpolate_df(x_new, baseline_df, x_col, y_col):
     )
     
     return interpolated_values
-def get_enriched_sleep_data(df: pd.DataFrame) -> pd.DataFrame:
+
+def get_enriched_sleep_data(df: pd.DataFrame, USER) -> pd.DataFrame:
     """
     Enriches sleep data with a rolling 4-day WHOOP-style consistency score (sci)
     and other interpolated HR metrics.
@@ -122,7 +110,7 @@ def get_enriched_sleep_data(df: pd.DataFrame) -> pd.DataFrame:
     df_final['SleepConsistencyIndex'] = whoop_consistency_scores
 
 
-    baseline_data = pd.read_csv('.../data/sleep_hr.csv')
+    baseline_data = pd.read_csv('enricher/data/sleep_hr.csv')
 
     df_final['SleepConsistencyIndexHR'] = interpolate_df(
         x_new=df_final['SleepConsistencyIndex'],
@@ -144,25 +132,25 @@ def get_enriched_sleep_data(df: pd.DataFrame) -> pd.DataFrame:
     df_final = df_final.drop(columns=['SleepDate'])
     df_final['email'] = USER
 
-
-
     return df_final[['SleepDuration', 'SleepConsistencyIndex', 'SleepConsistencyIndexHR', 'DurationHR', 'SleepHR', 'email']]
 
-def run_sleep_enricher():
+def run_sleep_enricher(client, USER, sex):
     query_sleep = """
     SELECT "sleepTimeSeconds", "time" FROM "SleepSummary" ORDER BY time ASC
     """
-
+    print("Getting Data")
     df = fill_nulls(query_garmin(client, query_sleep))
 
-    enriched_df = get_enriched_sleep_data(df)
+    print("Enriching Data")
+    enriched_df = get_enriched_sleep_data(df, USER)
 
+    print("Writing Data")
     try:
         client.write(
             record=enriched_df,
             data_frame_measurement_name="SleepDaily3",
             data_frame_tag_columns='email',
-            database="Enricher" # <-- OVERRIDE HERE
+            database="Enricher"
         )
         print(f"Successfully wrote data for user {USER}.")
     except Exception as e:

@@ -4,7 +4,12 @@ version = "0.1.0"
 description = "Calculates enriched metrics from raw Garmin data in InfluxDB."
 requires-python = ">=3.11"
 dependencies = [
-    "pandas",          # For data analysis and calculations
-    "influxdb-client", # Modern client for InfluxDB v2/v3
+    "pandas",          # For 'import pandas as pd'
+    "influxdb-client", # For 'from influxdb_client import InfluxDBClient'
     "schedule",        # For running the script periodically
+    "numpy",           # For 'import numpy as np'
+    "scipy",           # For 'from scipy.interpolate import ...'
+    "python-dotenv",   # For 'from dotenv import load_dotenv'
+    "influxdb==5.3.2",
+    "influxdb3-python==0.12.0",
 ]

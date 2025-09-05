@@ -1,16 +1,16 @@
 services:
   garmin-fetch-data:
     restart: unless-stopped
-    build: ./fetcher
+    build: ./garmin_fetcher
     container_name: garmin-fetch-data
     depends_on:
       - influxdb
     volumes:
       - ./garminconnect-tokens:/home/appuser/.garminconnect 
     env_file:
-      - .env.influx
-      - .env.garmin
-      - .env.user
+      - envs/.env.influx
+      - envs/.env.garmin
+      - envs/.env.user
   
   garmin-enrich-data:
     restart: unless-stopped
@@ -19,15 +19,15 @@ services:
     depends_on:
       - influxdb
     env_file:
-      - .env.influx
-      - .env.user
+      - envs/.env.influx
+      - envs/.env.user
 
   influxdb:
     restart: unless-stopped
     container_name: influxdb
     hostname: influxdb
     env_file:
-      - .env.influx
+      - envs/.env.influx
     ports:
       - "8181:8181"
     volumes:

@@ -1,0 +1,1 @@
+idb3.004.l¤È{"catalog_batch":{"Node":{"time_ns":1757106717986416795,"node_catalog_id":0,"node_id":"Influxdb-node1","ops":[{"StopNode":{"node_id":"Influxdb-node1","stopped_time_ns":1757106717986416795,"process_uuid":"7ab3c67a-380f-4608-bcf0-58eede71b5d0"}}]}},"sequence_number":79}

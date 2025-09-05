@@ -6,22 +6,7 @@ import numpy as np
 from scipy.interpolate import griddata, NearestNDInterpolator
 from datetime import datetime
 from dotenv import load_dotenv
-
-current_dir = os.getcwd()
-
-project_root = os.path.join(current_dir, '..', '..')
-
-if project_root not in sys.path:
-    sys.path.append(project_root)
-
-from enricher.src.utils.querying import setup_connection, fill_nulls, query_garmin
-
-client = setup_connection()
-
-env_path = os.path.expanduser(project_root + '/.env.user')
-load_dotenv(dotenv_path=env_path)
-sex = os.getenv('GENDER')
-USER = os.getenv('GARMINCONNECT_EMAIL')
+from src.utils.querying import fill_nulls, query_garmin
 
 def bilateral_interpolation(coordinates_df: pd.DataFrame, new_points_df: pd.DataFrame) -> pd.DataFrame:
     """
@@ -72,7 +57,7 @@ def bilateral_interpolation(coordinates_df: pd.DataFrame, new_points_df: pd.Data
     return result_df
 
 
-def run_vo2_enricher()
+def run_vo2_enricher(client, USER, sex):
   query_vo2 = """
   SELECT
     F.time,
@@ -84,7 +69,7 @@ def run_vo2_enricher()
   """
 
   df_vo2 = fill_nulls(query_garmin(client=client, query_string=query_vo2))
-  baseline = pd.read_csv('.../data/vo2_hr.csv')
+  baseline = pd.read_csv('./enricher/data/vo2_hr.csv')
   interpolated_df = bilateral_interpolation(baseline.loc[baseline['sex'] == sex], df_vo2)
   interpolated_df['email'] = USER
 

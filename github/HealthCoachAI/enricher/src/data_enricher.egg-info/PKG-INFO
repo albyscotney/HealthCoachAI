@@ -1,0 +1,8 @@
+Metadata-Version: 2.4
+Name: data-enricher
+Version: 0.1.0
+Summary: Calculates enriched metrics from raw Garmin data in InfluxDB.
+Requires-Python: >=3.11
+Requires-Dist: pandas
+Requires-Dist: influxdb-client
+Requires-Dist: schedule
